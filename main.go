@@ -1,0 +1,97 @@
+package main
+
+import (
+	"ToDoList/actions"
+	"ToDoList/structures"
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
+
+func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+
+	list := map[string]*structures.List{}
+
+	logs := []*structures.Logs{}
+
+	for {
+		fmt.Print("Введите комманду: ")
+
+		if ok := scanner.Scan(); !ok {
+			fmt.Println("ошибка")
+			return
+		}
+
+		text := scanner.Text()
+
+		textSlice := strings.Fields(text)
+
+		if len(textSlice) == 0 {
+			fmt.Println()
+			continue
+		}
+		cmd := textSlice[0]
+
+		if cmd == "add" {
+			isError := actions.AddTask(textSlice, list)
+
+			structures.AddLog(&logs, textSlice, isError)
+
+			continue
+		}
+
+		if cmd == "delete" {
+			isError := actions.DeleteTask(textSlice, list)
+
+			structures.AddLog(&logs, textSlice, isError)
+
+			continue
+		}
+
+		if cmd == "list" {
+			actions.GetTaskList(list)
+
+			structures.AddLog(&logs, textSlice, "")
+
+			continue
+		}
+
+		if cmd == "done" {
+			isError := actions.CompleteTask(textSlice, list)
+
+			structures.AddLog(&logs, textSlice, isError)
+
+			continue
+		}
+
+		if cmd == "log" {
+			isError := actions.GetLogs(logs)
+
+			structures.AddLog(&logs, textSlice, isError)
+
+			continue
+		}
+
+		if cmd == "help" {
+			isError := actions.Help()
+
+			structures.AddLog(&logs, textSlice, isError)
+
+			continue
+		}
+
+		if cmd == "exit" {
+			actions.Exit()
+		}
+
+		fmt.Println("Вы ввели неизвестную команду")
+
+		structures.AddLog(&logs, textSlice, "Вы ввели неизвестную команду")
+
+		fmt.Println("")
+
+	}
+
+}
