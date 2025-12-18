@@ -34,63 +34,59 @@ func main() {
 		}
 		cmd := textSlice[0]
 
-		if cmd == "add" {
+		switch {
+		case cmd == "add":
 			isError := actions.AddTask(textSlice, list)
 
 			structures.AddLog(&logs, textSlice, isError)
 
 			continue
-		}
 
-		if cmd == "delete" {
+		case cmd == "delete":
 			isError := actions.DeleteTask(textSlice, list)
 
 			structures.AddLog(&logs, textSlice, isError)
 
 			continue
-		}
 
-		if cmd == "list" {
+		case cmd == "list":
 			actions.GetTaskList(list)
 
 			structures.AddLog(&logs, textSlice, "")
 
 			continue
-		}
 
-		if cmd == "done" {
+		case cmd == "done":
 			isError := actions.CompleteTask(textSlice, list)
 
 			structures.AddLog(&logs, textSlice, isError)
 
 			continue
-		}
 
-		if cmd == "log" {
+		case cmd == "log":
 			isError := actions.GetLogs(logs)
 
 			structures.AddLog(&logs, textSlice, isError)
 
 			continue
-		}
 
-		if cmd == "help" {
+		case cmd == "help":
 			isError := actions.Help()
 
 			structures.AddLog(&logs, textSlice, isError)
 
 			continue
-		}
 
-		if cmd == "exit" {
+		case cmd == "exit":
 			actions.Exit()
+
+		default:
+			fmt.Println("Вы ввели неизвестную команду")
+
+			structures.AddLog(&logs, textSlice, "Вы ввели неизвестную команду")
+
+			fmt.Println("")
 		}
-
-		fmt.Println("Вы ввели неизвестную команду")
-
-		structures.AddLog(&logs, textSlice, "Вы ввели неизвестную команду")
-
-		fmt.Println("")
 
 	}
 
